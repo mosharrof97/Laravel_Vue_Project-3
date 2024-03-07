@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:sanctum', ['admin']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:sanctum', ['admin']);
+    // }
     /**
      * Display a listing of the resource.
      */

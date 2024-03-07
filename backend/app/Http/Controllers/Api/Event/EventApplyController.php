@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Event;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\EvantApply;
@@ -13,7 +14,18 @@ class EventApplyController extends Controller
      */
     public function index()
     {
-        //
+        $evantApply = EvantApply::all();
+
+        if(!auth()->user()){
+            return response()->json([
+                'status'=>true,
+                'evantApply' => 'Please Login',
+            ],401);
+        }
+        return response()->json([
+            'status'=>true,
+            'evantApply' => $evantApply,
+        ]);
     }
 
     /**
@@ -25,19 +37,26 @@ class EventApplyController extends Controller
             'phone' => 'required',
             'email' => 'required',
         ]);
+        try{
+            $evantApply = EvantApply::create([
+                'user_id'=> '2',//auth()->user()->id,
+                'event_id'=> $request->event_id,
+                'phone'=> $request->phone,
+                'email'=> $request->email,
+            ]);
 
-        $evantApply = EvantApply::create([
-            'user_id'=> auth()->user()->id,
-            'event_id'=> $request->event_id,
-            'phone'=> $request->phone,
-            'email'=> $request->email,
-        ]);
+            return response()->json([
+                'status' => true,
+                'ApplyDetails'=> $evantApply,
+                'message' => 'Registration Successful.',
+            ]);
+        }catch(error){
+            return response()->json([
+                'status' => false,
+                'message' => 'Registration Not Successful!!!.',
+            ]);
+        }
 
-        return response()->json([
-            'status' => true,
-            'ApplyDetails'=> $evantApply,
-            'message' => 'Registration Successful.',
-        ]);
     }
 
     /**
@@ -45,7 +64,12 @@ class EventApplyController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $evantApply = EvantApply::where('user_id',$id)->get();
+        return response()->json([
+            'status' => true,
+            'ApplyDetails'=> $evantApply,
+            'message' => 'Registration Successful.',
+        ]);
     }
 
     /**
